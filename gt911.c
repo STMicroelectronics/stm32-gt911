@@ -361,8 +361,10 @@ int32_t GT911_GetState(GT911_Object_t *pObj, GT911_State_t *pState)
 int32_t GT911_GetMultiTouchState(GT911_Object_t *pObj, GT911_MultiTouch_State_t *pState)
 {
   int32_t ret;
-  uint8_t data[40] = {0};
   uint32_t i;
+  uint8_t data[40] = {0};
+  uint8_t value = 0U;
+
 
   ret = GT911_DetectTouch(pObj);
 
@@ -405,6 +407,8 @@ int32_t GT911_GetMultiTouchState(GT911_Object_t *pObj, GT911_MultiTouch_State_t 
       pState->TouchWeight[i] = 0U;
       pState->TouchTrackID[i] = 0U;
     }
+    /* Acknowledge the reading of the Touch coordinates */
+    ret = gt911_write_reg(&pObj->Ctx, GT911_TD_STAT_REG, &value, 1U);
   }
 
   return ret;
